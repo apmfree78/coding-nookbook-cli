@@ -77,7 +77,7 @@ const markdown = `
 - Allows you to add Multiple Coding and Markdown Cells
 - Each cell has a preview window. 
 - Any variable, object, or React component created in 1 cell is ascessible in all subsequent cells.
-- **Import any npm package using standard ES6 import statement at to of cell**
+- **Import any npm package using standard ES6 import statement at top of cell**
  
 ### *Use the \`show()\` to display any variable, object, JSX, or React component to the adjacent preview window.*
 
