@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import { ActionType } from '../action-types';
+import axios from 'axios';
 import {
   UpdateCellAction,
   Action,
@@ -8,7 +9,7 @@ import {
   Direction,
   InsertCellAction,
 } from '../actions';
-import { CellTypes } from '../cell';
+import { Cell, CellTypes } from '../cell';
 import bundle from '../../bundler';
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
@@ -72,5 +73,44 @@ export const createBundle = (cellId: string, input: string) => {
         },
       },
     });
+  };
+};
+
+export const fetchCells = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    // dispatch loading state
+    dispatch({ type: ActionType.FETCH_CELLS });
+
+    try {
+      const { data }: { data: Cell[] } = await axios.get('/cells');
+      // dispatch fetch complete with payload of data
+      dispatch({ type: ActionType.FETCH_CELLS_COMPLETE, payload: data });
+    } catch (err) {
+      if (err instanceof Error) {
+        // dispatch error message
+        dispatch({ type: ActionType.FETCH_CELLS_ERROR, payload: err.message });
+      }
+    }
+  };
+};
+
+export const saveCells = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    // dispatch loading state
+    dispatch({ type: ActionType.SAVE_CELLS });
+
+    try {
+      const response = await axios.post('/cells');
+      // dispatch fetch complete with payload of data
+      dispatch({
+        type: ActionType.SAVE_CELLS_COMPLETE,
+        payload: response.statusText,
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        // dispatch error message
+        dispatch({ type: ActionType.SAVE_CELLS_ERROR, payload: err.message });
+      }
+    }
   };
 };

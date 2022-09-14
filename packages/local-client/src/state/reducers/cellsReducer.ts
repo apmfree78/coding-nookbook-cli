@@ -1,4 +1,5 @@
 import produce from 'immer';
+import ActionBar from '../../components/action-bar';
 import { ActionType } from '../action-types';
 import { Action } from '../actions';
 import { Cell } from '../cell';
@@ -21,6 +22,31 @@ const iniatialState: CellsState = {
 
 const reducer = produce((state: CellsState = iniatialState, action: Action) => {
   switch (action.type) {
+    case ActionType.FETCH_CELLS:
+      state.loading = true;
+      state.error = null;
+      return state;
+    case ActionType.FETCH_CELLS_COMPLETE:
+      // determine order of cells first
+      const order = action.payload.map((cell) => cell.id);
+
+      // now create new state
+      let newState: CellsState = iniatialState;
+
+      //update error, loading and order properties first
+      newState.loading = false;
+      newState.error = null;
+      newState.order = [...order];
+
+      // construct data property of new state
+      order.forEach((id, index) => {
+        newState.data[id] = { ...action.payload[index] };
+      });
+      return newState;
+    case ActionType.FETCH_CELLS_ERROR:
+      state.error = action.payload;
+      state.loading = false;
+      return state;
     case ActionType.UPDATE_CELL:
       const { id, content } = action.payload;
       state.data[id].content = content;
