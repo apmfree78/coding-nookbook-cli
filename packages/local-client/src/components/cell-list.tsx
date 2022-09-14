@@ -11,14 +11,10 @@ const CellList: React.FC = () => {
   );
 
   // fetching cells from file
-  const { fetchCells, saveCells } = useActions();
+  const { fetchCells } = useActions();
   useEffect(() => {
     fetchCells();
   }, []);
-
-  useEffect(() => {
-    saveCells();
-  }, [JSON.stringify(cells)]);
 
   const renderedCells = cells.map((cell) => (
     <Fragment key={cell.id}>

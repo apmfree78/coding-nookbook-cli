@@ -11,6 +11,8 @@ export const persistMiddleware = ({
   dispatch: Dispatch<Action>;
   getState: () => RootState;
 }) => {
+  let timer: any; // timer for debouncing
+
   return (next: (action: Action) => void) => {
     return (action: Action) => {
       next(action);
@@ -23,8 +25,12 @@ export const persistMiddleware = ({
           ActionType.DELETE_CELL,
         ].includes(action.type)
       ) {
-        console.log('save cells to file');
-        saveCells()(dispatch, getState);
+        // saving cells to file with debouncing
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          console.log('save cells to file');
+          saveCells()(dispatch, getState);
+        }, 500);
       }
     };
   };
