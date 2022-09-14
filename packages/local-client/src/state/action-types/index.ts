@@ -8,7 +8,5 @@ export enum ActionType {
   FETCH_CELLS = 'fetch_cells',
   FETCH_CELLS_COMPLETE = 'fetch_cells_complete',
   FETCH_CELLS_ERROR = 'fetch_cells_errors',
-  SAVE_CELLS = 'save_cells',
-  SAVE_CELLS_COMPLETE = 'save_cells_complete',
   SAVE_CELLS_ERROR = 'save_cells_error',
 }

@@ -11,6 +11,7 @@ import {
 } from '../actions';
 import { Cell, CellTypes } from '../cell';
 import bundle from '../../bundler';
+import { RootState } from '../reducers';
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
@@ -95,17 +96,17 @@ export const fetchCells = () => {
 };
 
 export const saveCells = () => {
-  return async (dispatch: Dispatch<Action>) => {
-    // dispatch loading state
-    dispatch({ type: ActionType.SAVE_CELLS });
+  return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    // extracting cell data from state
+    const {
+      cells: { data, order },
+    } = getState();
+
+    const cells = order.map((id) => data[id]);
 
     try {
-      const response = await axios.post('/cells');
+      await axios.post('/cells', { cells });
       // dispatch fetch complete with payload of data
-      dispatch({
-        type: ActionType.SAVE_CELLS_COMPLETE,
-        payload: response.statusText,
-      });
     } catch (err) {
       if (err instanceof Error) {
         // dispatch error message
