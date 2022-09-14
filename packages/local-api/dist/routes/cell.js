@@ -14,21 +14,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCellsRouter = void 0;
 const express_1 = __importDefault(require("express"));
+const path_1 = __importDefault(require("path"));
+const promises_1 = __importDefault(require("fs/promises"));
 const createCellsRouter = (filename, dir) => {
     const router = express_1.default.Router();
+    const fullPath = path_1.default.join(dir, filename);
     router.get('/cells', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        // make sure the cells storage file exists
-        //if the file does not exist then add in default content
-        //Read the file
-        // parse the list of cells
-        // send the list back to browser as response
+        const isLocalApiError = (err) => {
+            return typeof err.code === 'string';
+        };
+        try {
+            // Read the file
+            const result = yield promises_1.default.readFile(fullPath, 'utf-8');
+            res.send(JSON.parse(result));
+        }
+        catch (err) {
+            //if the file does not exist then add in default content
+            if (isLocalApiError(err)) {
+                if (err.code === 'ENOENT') {
+                    // Add code to create a file and add default cells
+                    yield promises_1.default.writeFile(fullPath, '[]', 'utf-8');
+                    res.send([]);
+                }
+            }
+            else {
+                throw err;
+            }
+        }
     }));
     router.post('/cells', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        // make sure file exits
-        // if not, create it
-        // take the list of cels from the obj
+        // take the list of cells from the obj
         // serialize them
-        // write cells into file
+        const { cells } = req.body;
+        // save cells to file
+        yield promises_1.default.writeFile(fullPath, JSON.stringify(cells), 'utf-8');
+        res.send({ status: 'ok' });
     }));
     return router;
 };
