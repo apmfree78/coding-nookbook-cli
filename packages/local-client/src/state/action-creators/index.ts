@@ -85,6 +85,8 @@ export const fetchCells = () => {
     try {
       const { data }: { data: Cell[] } = await axios.get('/cells');
       // dispatch fetch complete with payload of data
+      console.log('data from api before dispatching fetch cells complete');
+      console.log(JSON.stringify(data));
       dispatch({ type: ActionType.FETCH_CELLS_COMPLETE, payload: data });
     } catch (err) {
       if (err instanceof Error) {
@@ -105,8 +107,8 @@ export const saveCells = () => {
     const cells = order.map((id) => data[id]);
 
     try {
+      console.log(`saving cells : ${JSON.stringify(cells)}`);
       await axios.post('/cells', { cells });
-      // dispatch fetch complete with payload of data
     } catch (err) {
       if (err instanceof Error) {
         // dispatch error message

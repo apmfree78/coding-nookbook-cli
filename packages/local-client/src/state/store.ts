@@ -1,10 +1,15 @@
 import { createStore, applyMiddleware } from 'redux';
+import { persistMiddleware } from './middlewares/presist-middleware';
 import thunk from 'redux-thunk';
 import reducers from './reducers';
-import { ActionType } from './action-types';
-import { updateCell } from './action-creators';
+// import { ActionType } from './action-types';
+// import { updateCell } from './action-creators';
 
-export const store = createStore(reducers, {}, applyMiddleware(thunk));
+export const store = createStore(
+  reducers,
+  {},
+  applyMiddleware(persistMiddleware, thunk)
+);
 
 // testing reducer
 

@@ -30,21 +30,18 @@ const reducer = produce((state: CellsState = iniatialState, action: Action) => {
       return state;
     case ActionType.FETCH_CELLS_COMPLETE:
       // determine order of cells first
-      const order = action.payload.map((cell) => cell.id);
-
-      // now create new state
-      let newState: CellsState = iniatialState;
+      state.order = action.payload.map((cell) => cell.id);
 
       //update error, loading and order properties first
-      newState.loading = false;
-      newState.error = null;
-      newState.order = [...order];
+      state.loading = false;
+      state.error = null;
 
+      console.log('new state after fetching cells');
       // construct data property of new state
-      order.forEach((id, index) => {
-        newState.data[id] = { ...action.payload[index] };
+      state.order.forEach((id, index) => {
+        state.data[id] = { ...action.payload[index] };
       });
-      return newState;
+      return state;
     case ActionType.FETCH_CELLS_ERROR:
       state.error = action.payload;
       state.loading = false;
