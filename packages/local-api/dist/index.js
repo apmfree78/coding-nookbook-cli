@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.serve = void 0;
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
+const cell_1 = require("./routes/cell");
 // import { createProxyMiddleware } from 'http-proxy-middleware';
 const serve = (port, filename, dir) => {
     const app = (0, express_1.default)();
@@ -18,6 +19,7 @@ const serve = (port, filename, dir) => {
     //     ws: true,
     //   })
     // );
+    app.use((0, cell_1.createCellsRouter)(filename, dir));
     return new Promise((resolve, reject) => {
         app.listen(port, resolve).on('error', reject);
     });
