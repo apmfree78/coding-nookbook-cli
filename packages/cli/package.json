@@ -1,17 +1,24 @@
 {
-  "name": "cli",
+  "name": "javascriptnotebook",
   "version": "1.0.0",
   "description": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "tsc --watch --preserveWatchOutput",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "commander": "^9.4.0",
-    "local-api": "^1.0.0"
+    "@javascriptnotebook/local-api": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.7.16",

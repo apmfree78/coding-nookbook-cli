@@ -1,12 +1,36 @@
 import { Command } from 'commander';
 import path from 'path';
-import { serve } from 'local-api';
+import { serve } from '@javascriptnotebook/local-api';
+
+interface LocalApiError {
+  code: string;
+}
 
 export const serveCommand = new Command()
   .command('serve [filename]')
   .description('Open a file for editing')
   .option('-p, --port <number>', 'port to run server on', '4005')
-  .action((filename = 'notebook.js', options: { port: string }) => {
-    const dir = path.join(process.cwd(), path.dirname(filename));
-    serve(parseInt(options.port), path.basename(filename), dir);
+  .action(async (filename = 'notebook.js', options: { port: string }) => {
+    const isLocalApiError = (err: any): err is LocalApiError => {
+      return typeof err.code === 'string';
+    };
+    // run serve function to launch server
+    try {
+      const dir = path.join(process.cwd(), path.dirname(filename));
+      await serve(parseInt(options.port), path.basename(filename), dir);
+      // user instructions
+      console.log(
+        `Opened ${filename}. Now navigate to http://localhost:${options.port} to edit your coding notebook.`
+      );
+    } catch (err) {
+      // check for errors
+      if (isLocalApiError(err)) {
+        if (err.code === 'EADDRINUSE') {
+          console.error('Port is in use. Try running on a different port.');
+        }
+      } else if (err instanceof Error) {
+        console.log('Here is the problem,', err.message);
+      }
+      process.exit(1);
+    }
   });
