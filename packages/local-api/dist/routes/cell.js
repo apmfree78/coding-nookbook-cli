@@ -19,6 +19,8 @@ const promises_1 = __importDefault(require("fs/promises"));
 const createCellsRouter = (filename, dir) => {
     const router = express_1.default.Router();
     const fullPath = path_1.default.join(dir, filename);
+    //middleware to parse req.body
+    router.use(express_1.default.json());
     router.get('/cells', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const isLocalApiError = (err) => {
             return typeof err.code === 'string';
@@ -26,6 +28,7 @@ const createCellsRouter = (filename, dir) => {
         try {
             // Read the file
             const result = yield promises_1.default.readFile(fullPath, 'utf-8');
+            console.log(`reading cells from file: ${result}`);
             res.send(JSON.parse(result));
         }
         catch (err) {

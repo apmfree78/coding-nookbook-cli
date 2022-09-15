@@ -1,13 +1,17 @@
 import express from 'express';
 import path from 'path';
 import { createCellsRouter } from './routes/cell';
-import fs from 'fs/promises'
 // import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export const serve = (port: number, filename: string, dir: string) => {
   const app = express();
 
-  const packagePath = require.resolve('local-client/build/index.html');
+  // channel request through routes
+  app.use(createCellsRouter(filename, dir));
+
+  const packagePath = require.resolve(
+    '@javascriptnotebook/local-client/build/index.html'
+  );
   app.use(express.static(path.dirname(packagePath)));
   // setting up proxy to catch requests going to react app
   // app.use(
@@ -16,8 +20,6 @@ export const serve = (port: number, filename: string, dir: string) => {
   //     ws: true,
   //   })
   // );
-
-  app.use(createCellsRouter(filename, dir));
 
   return new Promise<void>((resolve, reject) => {
     app.listen(port, resolve).on('error', reject);

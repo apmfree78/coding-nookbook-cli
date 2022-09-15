@@ -15,6 +15,9 @@ export const createCellsRouter = (filename: string, dir: string) => {
   const router = express.Router();
   const fullPath = path.join(dir, filename);
 
+  //middleware to parse req.body
+  router.use(express.json());
+
   router.get('/cells', async (req, res) => {
     const isLocalApiError = (err: any): err is LocalApiError => {
       return typeof err.code === 'string';
@@ -22,7 +25,7 @@ export const createCellsRouter = (filename: string, dir: string) => {
     try {
       // Read the file
       const result = await fs.readFile(fullPath, 'utf-8');
-
+      console.log(`reading cells from file: ${result}`);
       res.send(JSON.parse(result));
     } catch (err) {
       //if the file does not exist then add in default content
