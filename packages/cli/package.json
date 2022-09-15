@@ -1,5 +1,5 @@
 {
-  "name": "javascriptnotebook",
+  "name": "jsnotebook-apmfree",
   "version": "1.0.0",
   "description": "",
   "publishConfig": {
@@ -24,5 +24,6 @@
     "commander": "^9.4.0",
     "esbuild": "0.8.26",
     "typescript": "^4.8.3"
-  }
+  },
+  "gitHead": "3ff6ec24ce67fdaf221f55a9ab14295ef1252c6a"
 }
