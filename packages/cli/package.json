@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@javascriptnotebook/local-api": "^1.0.0",
+    "@javascriptnotebook/local-api": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.7.16",
